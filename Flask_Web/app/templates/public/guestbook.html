@@ -1,0 +1,73 @@
+{% extends 'public/templates/public_templates.html' %}
+
+{% block title %}Guestbook{% endblock %}
+
+{% block main %}
+<div class='container'>
+    <div class="row">
+        <div class="col">
+            <h1>Guestbook</h1>
+            <hr>
+
+            <div class="mb-3">
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" , id="name" , placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label>Message</label>
+                    <textarea class="form-control" , id="message" , cols="3" , placeholder="Enter your message"></textarea>
+                </div>
+
+                <button class="btn btn-primary" onclick="submit_entry();">leave message</button>
+
+            </div>
+            <h3>Message</h3>
+            <hr>
+            <div class="mb-3" id="message"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    function submit_entry() {
+        var name = document.getElementsById("name");
+        var message = document.getElementById("message")
+        var entry = {
+            name: name.value,
+            message: message.value
+        };
+    }
+
+        fetch(`http://127.0.0.1:5000/guestbook/create-entry`, {
+            method: "POST",
+            credentials: "include",
+            body: JSON.tringnify(entry),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+        })
+        .then(function (response) {
+            if (response.status !== 200) {
+                console.log(`Look like there was a problem. Status code: ${response.status}`);
+                return;
+            }
+            response.json().then(function (data) {
+                console.log(data);
+            });
+        })
+        .catch(function(error) {
+            console.log("Fetch error: " + error);
+        });
+
+</script>
+
+
+{% endblock %}
